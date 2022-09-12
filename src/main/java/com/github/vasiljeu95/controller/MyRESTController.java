@@ -1,12 +1,9 @@
 package com.github.vasiljeu95.controller;
 
 import com.github.vasiljeu95.entity.Employee;
-import com.github.vasiljeu95.exeptionHandling.EmployeeIncorrectData;
 import com.github.vasiljeu95.exeptionHandling.NoSuchEmployeeException;
 import com.github.vasiljeu95.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +27,20 @@ public class MyRESTController {
     }
 
     @GetMapping("/employees/{id}")
-    private Employee showEmployeeById (@PathVariable int id) {
+    public Employee showEmployeeById (@PathVariable int id) {
         Employee employee = employeeService.getEmployee(id);
 
         if (employee == null) {
             String message = "There is no employee with ID = " + id + " in Database";
             throw new NoSuchEmployeeException(message);
         }
+
+        return employee;
+    }
+
+    @PostMapping("/employees")
+    public Employee addNewEmployee (@RequestBody Employee employee) {
+        employeeService.saveEmployee(employee);
 
         return employee;
     }
